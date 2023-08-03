@@ -165,4 +165,4 @@ class MelDataset(torch.utils.data.Dataset):
         return (mel.squeeze(), audio.squeeze(0), filename, mel_loss.squeeze())
 
     def __len__(self):
-        return len(self.audio_files)
+        return len(self.audio_files) * 1024
