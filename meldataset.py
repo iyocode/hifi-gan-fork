@@ -109,7 +109,7 @@ class MelDataset(torch.utils.data.Dataset):
         self.base_mels_path = base_mels_path
 
     def __getitem__(self, index):
-        filename = self.audio_files[index]
+        filename = self.audio_files[index % len(self.audio_files)]
         if self._cache_ref_count == 0:
             audio, sampling_rate = load_wav(filename)
             audio = audio / MAX_WAV_VALUE
