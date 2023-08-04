@@ -157,6 +157,16 @@ def train(rank, a, h):
             optim_g.step()
 
             if rank == 0:
+                sw.add_audio('gt/y_{}'.format(j), y[0], steps, h.sampling_rate)
+                sw.add_figure('gt/y_spec_{}'.format(j), plot_spectrogram(x[0]), steps)
+
+                sw.add_audio('generated/y_hat_{}'.format(j), y_g_hat[0], steps, h.sampling_rate)
+                y_hat_spec = mel_spectrogram(y_g_hat.squeeze(1), h.n_fft, h.num_mels,
+                                                h.sampling_rate, h.hop_size, h.win_size,
+                                                h.fmin, h.fmax)
+                sw.add_figure('generated/y_hat_spec_{}'.format(j),
+                                plot_spectrogram(y_hat_spec.squeeze(0).cpu().numpy()), steps)
+                
                 # STDOUT logging
                 if steps % a.stdout_interval == 0:
                     with torch.no_grad():
@@ -199,8 +209,8 @@ def train(rank, a, h):
                                                           h.fmin, h.fmax_for_loss)
                             val_err_tot += F.l1_loss(y_mel, y_g_hat_mel).item()
 
-                            if j <= 4:
-                                if steps == 2500000:
+                            """if j <= 4:
+                                if steps == 0:
                                     sw.add_audio('gt/y_{}'.format(j), y[0], steps, h.sampling_rate)
                                     sw.add_figure('gt/y_spec_{}'.format(j), plot_spectrogram(x[0]), steps)
 
@@ -209,7 +219,7 @@ def train(rank, a, h):
                                                              h.sampling_rate, h.hop_size, h.win_size,
                                                              h.fmin, h.fmax)
                                 sw.add_figure('generated/y_hat_spec_{}'.format(j),
-                                              plot_spectrogram(y_hat_spec.squeeze(0).cpu().numpy()), steps)
+                                              plot_spectrogram(y_hat_spec.squeeze(0).cpu().numpy()), steps)"""
 
                         val_err = val_err_tot / (j+1)
                         sw.add_scalar("validation/mel_spec_error", val_err, steps)
