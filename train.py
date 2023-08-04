@@ -157,15 +157,16 @@ def train(rank, a, h):
             optim_g.step()
 
             if rank == 0:
-                sw.add_audio('gt/y_{}'.format(j), y[0], steps, h.sampling_rate)
-                sw.add_figure('gt/y_spec_{}'.format(j), plot_spectrogram(x[0]), steps)
+                """sw.add_audio('gt/y', y[0], steps, h.sampling_rate)
+                sw.add_figure('gt/x', plot_spectrogram(x[0].cpu()), steps)
+                sw.add_figure('gt/y_spec', plot_spectrogram(y_mel[0].cpu()), steps)
 
-                sw.add_audio('generated/y_hat_{}'.format(j), y_g_hat[0], steps, h.sampling_rate)
-                y_hat_spec = mel_spectrogram(y_g_hat.squeeze(1), h.n_fft, h.num_mels,
+                sw.add_audio('generated/y_hat', y_g_hat[0], steps, h.sampling_rate)
+                y_hat_spec = mel_spectrogram(y_g_hat[0].squeeze(1), h.n_fft, h.num_mels,
                                                 h.sampling_rate, h.hop_size, h.win_size,
                                                 h.fmin, h.fmax)
-                sw.add_figure('generated/y_hat_spec_{}'.format(j),
-                                plot_spectrogram(y_hat_spec.squeeze(0).cpu().numpy()), steps)
+                sw.add_figure('generated/y_hat_spec',
+                                plot_spectrogram(y_hat_spec.squeeze(0).detach().cpu().numpy()), steps)"""
                 
                 # STDOUT logging
                 if steps % a.stdout_interval == 0:
